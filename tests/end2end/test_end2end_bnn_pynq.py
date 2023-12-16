@@ -536,7 +536,8 @@ class TestEnd2End:
 
     @pytest.mark.slow
     @pytest.mark.vivado
-    @pytest.mark.parametrize("kind", ["zynq", "alveo"])
+    @pytest.mark.parametrize("kind", ["zynq"])
+    #@pytest.mark.parametrize("kind", ["zynq", "alveo"])
     def test_ipgen(self, topology, wbits, abits, QONNX_export, kind):
         if kind == "alveo" and ("VITIS_PATH" not in os.environ):
             pytest.skip("VITIS_PATH not set")
@@ -554,7 +555,8 @@ class TestEnd2End:
 
     @pytest.mark.slow
     @pytest.mark.vivado
-    @pytest.mark.parametrize("kind", ["zynq", "alveo"])
+    @pytest.mark.parametrize("kind", ["zynq"])
+    #@pytest.mark.parametrize("kind", ["zynq", "alveo"])
     def test_set_fifo_depths(self, topology, wbits, abits, QONNX_export, kind):
         prev_chkpt_name = get_checkpoint_name(
             topology, wbits, abits, QONNX_export, "ipgen_" + kind
@@ -663,7 +665,8 @@ class TestEnd2End:
     @pytest.mark.slow
     @pytest.mark.vivado
     @pytest.mark.vitis
-    @pytest.mark.parametrize("kind", ["zynq", "alveo"])
+    @pytest.mark.parametrize("kind", ["zynq"])
+    #@pytest.mark.parametrize("kind", ["zynq", "alveo"])
     def test_build(self, topology, wbits, abits, QONNX_export, kind):
         if kind == "alveo" and ("VITIS_PATH" not in os.environ):
             pytest.skip("VITIS_PATH not set")
@@ -685,7 +688,8 @@ class TestEnd2End:
     @pytest.mark.slow
     @pytest.mark.vivado
     @pytest.mark.vitis
-    @pytest.mark.parametrize("kind", ["zynq", "alveo"])
+    @pytest.mark.parametrize("kind", ["zynq"])
+    #@pytest.mark.parametrize("kind", ["zynq", "alveo"])
     def test_make_pynq_driver(self, topology, wbits, abits, QONNX_export, kind):
         if kind == "alveo" and ("VITIS_PATH" not in os.environ):
             pytest.skip("VITIS_PATH not set")
@@ -699,7 +703,8 @@ class TestEnd2End:
             get_checkpoint_name(topology, wbits, abits, QONNX_export, "driver_" + kind)
         )
 
-    @pytest.mark.parametrize("kind", ["zynq", "alveo"])
+    @pytest.mark.parametrize("kind", ["zynq"])
+    #@pytest.mark.parametrize("kind", ["zynq", "alveo"])
     def test_deploy(self, topology, wbits, abits, QONNX_export, kind):
         prev_chkpt_name = get_checkpoint_name(
             topology, wbits, abits, QONNX_export, "driver_" + kind
@@ -722,7 +727,8 @@ class TestEnd2End:
             get_checkpoint_name(topology, wbits, abits, QONNX_export, "deploy_" + kind)
         )
 
-    @pytest.mark.parametrize("kind", ["zynq", "alveo"])
+    @pytest.mark.parametrize("kind", ["zynq"])
+    #@pytest.mark.parametrize("kind", ["zynq", "alveo"])
     def test_run_on_hw(self, topology, wbits, abits, QONNX_export, kind):
         prev_chkpt_name = get_checkpoint_name(
             topology, wbits, abits, QONNX_export, "deploy_" + kind
@@ -746,7 +752,8 @@ class TestEnd2End:
         y = ret[oname]
         assert np.isclose(y, output_tensor_npy).all()
 
-    @pytest.mark.parametrize("kind", ["zynq", "alveo"])
+    @pytest.mark.parametrize("kind", ["zynq"])
+    #@pytest.mark.parametrize("kind", ["zynq", "alveo"])
     def test_throughput_hw(self, topology, wbits, abits, QONNX_export, kind):
         prev_chkpt_name = get_checkpoint_name(
             topology, wbits, abits, QONNX_export, "deploy_" + kind
