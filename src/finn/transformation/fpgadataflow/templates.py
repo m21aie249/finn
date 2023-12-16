@@ -254,7 +254,7 @@ eval "$(conda shell.bash hook)"
 conda activate $CONDA_ENV_NAME$
 source $REMOTE_XRT$/setup.sh
 export PLATFORM_REPO_PATHS=$REMOTE_PLATFORM_REPO_PATHS$
-python3.6 driver.py --exec_mode=$1 --batchsize=$2 --bitfile=$BITFILE$ \
+python3 driver.py --exec_mode=$1 --batchsize=$2 --bitfile=$BITFILE$ \
     --inputfile=input.npy --outputfile=output.npy --platform=alveo
 """
 
