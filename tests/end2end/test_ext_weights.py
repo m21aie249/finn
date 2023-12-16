@@ -144,7 +144,7 @@ def test_end2end_ext_weights_run_on_hw():
         f.write(
             """#!/bin/bash
 cd %s/driver
-echo %s | sudo -S python3.6 validate.py --dataset mnist --bitfile %s
+echo %s | sudo -S python3 validate.py --dataset mnist --bitfile %s
         """
             % (
                 build_env["target_dir"] + "/end2end_ext_weights_build",

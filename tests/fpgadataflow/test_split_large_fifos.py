@@ -77,7 +77,7 @@ def test_split_large_fifos(depth, force_python_rtlsim):
         target_fps=10000,
         force_python_rtlsim=force_python_rtlsim,
         synth_clk_period_ns=10.0,
-        board="Pynq-Z1",
+        board="Pynq-Z2",
         rtlsim_batch_size=100,
         shell_flow_type=build_cfg.ShellFlowType.VIVADO_ZYNQ,
         generate_outputs=[

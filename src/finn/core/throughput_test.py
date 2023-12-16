@@ -75,7 +75,7 @@ def throughput_test_remote(model, batchsize=1000, timeout=None):
         remote_cmd = "bash -ic 'bash alveo_run.sh throughput_test %d' \"" % batchsize
     else:
         remote_cmd = (
-            "python3.6 driver.py --exec_mode=throughput_test --batchsize={} "
+            "python3 driver.py --exec_mode=throughput_test --batchsize={} "
             "--bitfile={} --inputfile=input.npy --outputfile=output.npy "
             '--platform={} "'
         ).format(batchsize, bitfile, platform)

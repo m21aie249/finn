@@ -112,7 +112,7 @@ def get_build_env(kind, target_clk_ns):
     """
     ret = {}
     if kind == "zynq":
-        ret["board"] = os.getenv("PYNQ_BOARD", default="Pynq-Z1")
+        ret["board"] = os.getenv("PYNQ_BOARD", default="Pynq-Z2")
         ret["part"] = pynq_part_map[ret["board"]]
         ret["ip"] = os.getenv("PYNQ_IP", "")
         ret["username"] = os.getenv("PYNQ_USERNAME", "xilinx")

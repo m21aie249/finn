@@ -88,7 +88,7 @@ def remote_exec(model, execution_context):
         remote_cmd = "bash -ic 'bash alveo_run.sh execute %d' \"" % batchsize
     else:
         remote_cmd = (
-            "python3.6 driver.py --exec_mode=execute --batchsize={} "
+            "python3 driver.py --exec_mode=execute --batchsize={} "
             "--bitfile={} --inputfile=input.npy --outputfile=output.npy "
             '--platform={} "'
         ).format(batchsize, bitfile, platform)

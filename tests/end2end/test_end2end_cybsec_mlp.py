@@ -254,7 +254,7 @@ def test_end2end_cybsec_mlp_run_on_hw(QONNX_export):
         f.write(
             """#!/bin/bash
 cd %s/driver
-echo %s | sudo -S python3.6 validate-unsw-nb15.py --batchsize=10 --limit_batches=10
+echo %s | sudo -S python3 validate-unsw-nb15.py --batchsize=10 --limit_batches=10
         """
             % (
                 build_env["target_dir"] + "/end2end_cybsecmlp_build",

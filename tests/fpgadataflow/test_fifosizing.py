@@ -67,7 +67,7 @@ def test_fifosizing_linear(method, topology):
         target_fps=10000 if topology == "tfc" else 1000,
         force_python_rtlsim=force_python_rtlsim,
         synth_clk_period_ns=10.0,
-        board="Pynq-Z1",
+        board="Pynq-Z2",
         rtlsim_batch_size=100,
         shell_flow_type=build_cfg.ShellFlowType.VIVADO_ZYNQ,
         generate_outputs=[
