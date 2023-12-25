@@ -178,7 +178,7 @@ if [ "$FINN_DOCKER_PREBUILT" = "0" ]; then
   # Need to ensure this is done within the finn/ root folder:
   OLD_PWD=$(pwd)
   cd $SCRIPTPATH
-  docker build -f docker/Dockerfile.finn --build-arg XRT_DEB_VERSION=$XRT_DEB_VERSION --tag=$FINN_DOCKER_TAG . &> build.log
+  docker build -f docker/Dockerfile.finn --build-arg XRT_DEB_VERSION=$XRT_DEB_VERSION --tag=$FINN_DOCKER_TAG .
   cd $OLD_PWD
 fi
 # Launch container with current directory mounted
