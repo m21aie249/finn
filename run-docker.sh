@@ -86,7 +86,7 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 : ${ALVEO_BOARD="U250"}
 : ${ALVEO_TARGET_DIR="/tmp"}
 : ${PLATFORM_REPO_PATHS="/opt/xilinx/platforms"}
-: ${XRT_DEB_VERSION="xrt_202320.2.16.204_18.04-amd64-xrt"}
+: ${XRT_DEB_VERSION="xrt_202210.2.13.466_18.04-amd64-xrt"}
 : ${FINN_HOST_BUILD_DIR="/tmp/$DOCKER_INST_NAME"}
 : ${FINN_DOCKER_TAG="xilinx/finn:$(git describe --always --tags --dirty).$XRT_DEB_VERSION"}
 : ${FINN_DOCKER_PREBUILT="0"}
@@ -178,7 +178,7 @@ if [ "$FINN_DOCKER_PREBUILT" = "0" ]; then
   # Need to ensure this is done within the finn/ root folder:
   OLD_PWD=$(pwd)
   cd $SCRIPTPATH
-  docker build -f docker/Dockerfile.finn --build-arg XRT_DEB_VERSION=$XRT_DEB_VERSION --tag=$FINN_DOCKER_TAG .
+  docker build -f docker/Dockerfile.finn --build-arg XRT_DEB_VERSION=$XRT_DEB_VERSION --tag=$FINN_DOCKER_TAG . &> build.log
   cd $OLD_PWD
 fi
 # Launch container with current directory mounted
