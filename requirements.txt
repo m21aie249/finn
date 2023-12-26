@@ -17,3 +17,4 @@ sigtools==2.0.3
 toposort==1.5
 vcdvcd==1.0.5
 wget==3.2
+pynq==3.0.1
