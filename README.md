@@ -4,18 +4,18 @@ The following instructions apply specifically to this fork. FINN is very well do
 
 This official documentation page is a companion to the instructions below: [Getting Started](https://finn.readthedocs.io/en/latest/getting_started.html)
 
-1. On a Linux Ubuntu Desktop installation, install docker to run without root.
+1. On a Linux Ubuntu Desktop installation, with about 400GB of free space, install docker to run without root.
 2. Install Xilinx Vivado/Vitis 2022.1 using the installer from [AMD](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2022-1.html). This will take a few hours
 3. Add the lines present in the setup_env_in_host_bashrc file  in this repo to the user's .bashrc file
 4. Open a terminal and create a folder called finn (mkdir finn)
 5. Enter the folder (cd finn)
 6. Clone this FINN repository (git clone https://github.com/m21aie249/finn.git)
-7. Create a folder called gdrive-key (mkdir gdrive-key). Follow instruction at [Gspread Authentication]](https://docs.gspread.org/en/latest/oauth2.html) if results upload to a google spreadsheet is required.
+7. Create a folder called gdrive-key (mkdir gdrive-key). Follow instruction at [Gspread Authentication](https://docs.gspread.org/en/latest/oauth2.html) if results upload to a google spreadsheet is required.
 8. If step 6 was done, download the json file and rename it service_account.json and copy it to the gdrive_key folder. The tests will use this to upload results to a precreated spreadsheet file named finn-end2end-dashboard
 9. Create a directory called .ssh (mkdir .ssh) This step is required before setting up the automatic ssh login and keygen for the Pynq-Z2 board.
 10. Then follow these steps: [PYNQ board first-time setup](https://finn.readthedocs.io/en/latest/getting_started.html#pynq-board-first-time-setup)
 11. Run thie docker script (./run_docker.sh). This will build the container and will take about 20 minutes and then present a prompt when successful. 
-12. Further instructions and testing commands are included in the official documentation. Full FINN testcases suite would take 2 days to complete. It is worthwhile running it once.
+12. Further instructions and testing commands are included in the official documentation. Full FINN testcases suite would take 2 days to complete on a standard laptop. It is worthwhile running it once alongwith the Pyn-Z2 board to ensure everything is working correctly.
 
 
 ## <img src=https://raw.githubusercontent.com/Xilinx/finn/github-pages/docs/img/finn-logo.png width=128/> Fast, Scalable Quantized Neural Network Inference on FPGAs
