@@ -55,17 +55,17 @@ recho () {
 }
 
 # qonnx
-pip install --user -e ${FINN_ROOT}/deps/qonnx
+pip install --user -e ${FINN_ROOT}/deps/qonnx --use-feature=2020-resolver
 # finn-experimental
-pip install --user -e ${FINN_ROOT}/deps/finn-experimental
+pip install --user -e ${FINN_ROOT}/deps/finn-experimental --use-feature=2020-resolver
 # brevitas
-pip install --user -e ${FINN_ROOT}/deps/brevitas
+pip install --user -e ${FINN_ROOT}/deps/brevitas --use-feature=2020-resolver
 # pyverilator
-pip install --user -e ${FINN_ROOT}/deps/pyverilator
+pip install --user -e ${FINN_ROOT}/deps/pyverilator --use-feature=2020-resolver
 
 if [ -f "${FINN_ROOT}/setup.py" ];then
   # run pip install for finn
-  pip install --user -e ${FINN_ROOT}
+  pip install --user -e ${FINN_ROOT} --use-feature=2020-resolver
 else
   recho "Unable to find FINN source code in ${FINN_ROOT}"
   recho "Ensure you have passed -v <path-to-finn-repo>:<path-to-finn-repo> to the docker run command"

@@ -15,7 +15,7 @@ This official documentation page is a companion to the instructions below: [Gett
 9. Create a directory called .ssh (mkdir .ssh) This step is required before setting up the automatic ssh login and keygen for the Pynq-Z2 board.
 10. Then follow these steps: [PYNQ board first-time setup](https://finn.readthedocs.io/en/latest/getting_started.html#pynq-board-first-time-setup)
 11. Run thie docker script (./run_docker.sh). This will build the container and will take about 20 minutes and then present a prompt when successful. 
-12. Further instructions and testing commands are included in the official documentation. Full FINN testcases suite would take 2 days to complete on a standard laptop. It is worthwhile running it once alongwith the Pyn-Z2 board to ensure everything is working correctly.
+12. Further instructions and testing commands are included in the official documentation. Full FINN testcases suite would take 2 days to complete on a standard laptop. It is worthwhile running it once alongwith the Pynq-Z2 board to ensure everything is working correctly.
 
 
 ## <img src=https://raw.githubusercontent.com/Xilinx/finn/github-pages/docs/img/finn-logo.png width=128/> Fast, Scalable Quantized Neural Network Inference on FPGAs

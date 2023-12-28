@@ -85,6 +85,10 @@ RUN rm requirements.txt
 RUN pip install pygments==2.4.1
 RUN pip install ipykernel==5.5.5
 RUN pip install jupyter==1.0.0 --ignore-installed
+RUN pip install referencing==0.8.11
+RUN pip install jsonschema==4.17.3
+RUN pip install jsonschema-specifications==2022.12.3
+RUN pip install jupyter-events==0.6.3
 RUN pip install markupsafe==2.0.1
 RUN pip install matplotlib==3.3.1 --ignore-installed
 RUN pip install pytest-dependency==0.5.1
