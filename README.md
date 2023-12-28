@@ -1,8 +1,9 @@
 ## Setup Instructions:
 
-The following instructions apply specifically to this fork. FINN is very well documented in the official documentation. 
+The following additional instructions apply specifically to this fork. FINN is very well documented in the official documentation. 
 
 This official documentation page is a companion to the instructions below: [Getting Started](https://finn.readthedocs.io/en/latest/getting_started.html)
+Thanks to [This Page](https://www.daiphys.com/portal/fpga/xilinx/tools/finn.html) for resolutions of some build/run errors related to package dependencies.
 
 1. On a Linux Ubuntu Desktop installation, with about 400GB of free space, install docker to run without root.
 2. Install Xilinx Vivado/Vitis 2022.1 using the installer from [AMD](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2022-1.html). This will take a few hours
