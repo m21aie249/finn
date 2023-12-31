@@ -55,7 +55,7 @@ recho () {
 }
 
 # qonnx
-pip install --user -e ${FINN_ROOT}/deps/qonnx --use-feature=2020-resolver
+pip install --no-build-isolation --no-warn-script-location -e ${FINN_ROOT}/deps/qonnx --use-feature=2020-resolver
 # finn-experimental
 pip install --user -e ${FINN_ROOT}/deps/finn-experimental --use-feature=2020-resolver
 # brevitas
