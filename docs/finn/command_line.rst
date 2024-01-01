@@ -60,7 +60,7 @@ as it goes through numerous steps:
 .. code-block:: none
 
   Building dataflow accelerator from /home/maltanar/sandbox/build_dataflow/model.onnx
-  Outputs will be generated at output_tfc_w1a1_Pynq-Z
+  Outputs will be generated at output_tfc_w1a1_Pynq-Z2
   Build log is at output_tfc_w1a1_Pynq-Z2/build_dataflow.log
   Running step: step_tidy_up [1/16]
   Running step: step_streamline [2/16]

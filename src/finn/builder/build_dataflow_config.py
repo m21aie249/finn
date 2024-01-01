@@ -119,6 +119,7 @@ default_build_dataflow_steps = [
     "step_create_dataflow_partition",
     "step_target_fps_parallelization",
     "step_apply_folding_config",
+    "step_minimize_bit_width",
     "step_generate_estimate_reports",
     "step_hls_codegen",
     "step_hls_ipgen",
@@ -140,6 +141,7 @@ estimate_only_dataflow_steps = [
     "step_create_dataflow_partition",
     "step_target_fps_parallelization",
     "step_apply_folding_config",
+    "step_minimize_bit_width",
     "step_generate_estimate_reports",
 ]
 
@@ -233,9 +235,15 @@ class DataflowBuildConfig:
     #: flexibility, and makes it possible to have runtime-writable thresholds.
     standalone_thresholds: Optional[bool] = False
 
+    #: (Optional) Whether optimizations that minimize the bit width of the
+    #: weights and accumulator will be applied. Because this optimization relies
+    #: on the the values of the weights, it will only be applied if runtime-
+    #: writeable weights is not enabled.
+    minimize_bit_width: Optional[bool] = True
+
     #: Target board, only needed for generating full bitfiles where the FINN
     #: design is integrated into a shell.
-    #: e.g. "Pynq-Z1" or "U250"
+    #: e.g. "Pynq-Z1" or "Pynq-Z1" or "U250"
     board: Optional[str] = None
 
     #: Target shell flow, only needed for generating full bitfiles where the FINN
@@ -259,9 +267,7 @@ class DataflowBuildConfig:
 
     #: When `auto_fifo_depths = True`, select which method will be used for
     #: setting the FIFO sizes.
-    auto_fifo_strategy: Optional[
-        AutoFIFOSizingMethod
-    ] = AutoFIFOSizingMethod.LARGEFIFO_RTLSIM
+    auto_fifo_strategy: Optional[AutoFIFOSizingMethod] = AutoFIFOSizingMethod.LARGEFIFO_RTLSIM
 
     #: Avoid using C++ rtlsim for auto FIFO sizing and rtlsim throughput test
     #: if set to True, always using Python instead
@@ -358,9 +364,7 @@ class DataflowBuildConfig:
         elif self.shell_flow_type == ShellFlowType.VITIS_ALVEO:
             return "alveo"
         else:
-            raise Exception(
-                "Couldn't resolve driver platform for " + str(self.shell_flow_type)
-            )
+            raise Exception("Couldn't resolve driver platform for " + str(self.shell_flow_type))
 
     def _resolve_fpga_part(self):
         if self.fpga_part is None:
@@ -402,8 +406,7 @@ class DataflowBuildConfig:
             return alveo_default_platform[self.board]
         else:
             raise Exception(
-                "Could not resolve Vitis platform:"
-                " need either board or vitis_platform specified"
+                "Could not resolve Vitis platform:" " need either board or vitis_platform specified"
             )
 
     def _resolve_verification_steps(self):
@@ -421,8 +424,7 @@ class DataflowBuildConfig:
             )
             verify_input_npy = np.load(self.verify_input_npy)
             assert os.path.isfile(self.verify_expected_output_npy), (
-                "verify_expected_output_npy not found: "
-                + self.verify_expected_output_npy
+                "verify_expected_output_npy not found: " + self.verify_expected_output_npy
             )
             verify_expected_output_npy = np.load(self.verify_expected_output_npy)
             return (

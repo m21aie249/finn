@@ -89,6 +89,12 @@ from finn.transformation.fpgadataflow.insert_dwc import InsertDWC
 from finn.transformation.fpgadataflow.insert_fifo import InsertFIFO
 from finn.transformation.fpgadataflow.make_pynq_driver import MakePYNQDriver
 from finn.transformation.fpgadataflow.make_zynq_proj import ZynqBuild
+from finn.transformation.fpgadataflow.minimize_accumulator_width import (
+    MinimizeAccumulatorWidth,
+)
+from finn.transformation.fpgadataflow.minimize_weight_bit_width import (
+    MinimizeWeightBitWidth,
+)
 from finn.transformation.fpgadataflow.prepare_cppsim import PrepareCppSim
 from finn.transformation.fpgadataflow.prepare_ip import PrepareIP
 from finn.transformation.fpgadataflow.prepare_rtlsim import PrepareRTLSim
@@ -139,9 +145,7 @@ def verify_step(
         in_npy = np.expand_dims(in_npy_all[b], axis=0)
         exp_out_npy = np.expand_dims(exp_out_npy_all[b], axis=0)
         if need_parent:
-            assert (
-                cfg.save_intermediate_models
-            ), "Enable save_intermediate_models for verification"
+            assert cfg.save_intermediate_models, "Enable save_intermediate_models for verification"
             parent_model_fn = intermediate_models_dir + "/dataflow_parent.onnx"
             child_model_fn = intermediate_models_dir + "/verify_%s.onnx" % step_name
             model.save(child_model_fn)
@@ -155,9 +159,7 @@ def verify_step(
                 )
                 print("Attempting to force model shape on verification input")
                 in_npy = in_npy.reshape(exp_ishape)
-            out_dict = execute_parent(
-                parent_model_fn, child_model_fn, in_npy, return_full_ctx=True
-            )
+            out_dict = execute_parent(parent_model_fn, child_model_fn, in_npy, return_full_ctx=True)
             out_npy = out_dict[out_tensor_name]
         else:
             inp_tensor_name = model.graph.input[0].name
@@ -224,9 +226,7 @@ def prepare_for_stitched_ip_rtlsim(verify_model, cfg):
                 inst.set_nodeattr("ipgen_path", "")
                 need_restitch = True
         # StreamingDataWidthConverter must have impl_style=hls
-        for dwc_layer in verify_model.get_nodes_by_op_type(
-            "StreamingDataWidthConverter_Batch"
-        ):
+        for dwc_layer in verify_model.get_nodes_by_op_type("StreamingDataWidthConverter_Batch"):
             inst = getCustomOp(dwc_layer)
             if inst.get_nodeattr("impl_style") != "hls":
                 inst.set_nodeattr("impl_style", "hls")
@@ -376,8 +376,7 @@ def step_create_dataflow_partition(model: ModelWrapper, cfg: DataflowBuildConfig
 
     parent_model = model.transform(
         CreateDataflowPartition(
-            partition_model_dir=cfg.output_dir
-            + "/intermediate_models/supported_op_partitions"
+            partition_model_dir=cfg.output_dir + "/intermediate_models/supported_op_partitions"
         )
     )
     sdp_nodes = parent_model.get_nodes_by_op_type("StreamingDataflowPartition")
@@ -410,14 +409,13 @@ def step_target_fps_parallelization(model: ModelWrapper, cfg: DataflowBuildConfi
         hw_attrs = [
             "PE",
             "SIMD",
+            "parallel_window",
             "ram_style",
             "resType",
             "mem_mode",
             "runtime_writeable_weights",
         ]
-        extract_model_config_to_json(
-            model, cfg.output_dir + "/auto_folding_config.json", hw_attrs
-        )
+        extract_model_config_to_json(model, cfg.output_dir + "/auto_folding_config.json", hw_attrs)
 
     return model
 
@@ -452,9 +450,7 @@ def step_generate_estimate_reports(model: ModelWrapper, cfg: DataflowBuildConfig
         with open(report_dir + "/estimate_layer_cycles.json", "w") as f:
             json.dump(estimate_layer_cycles, f, indent=2)
         estimate_layer_resources = model.analysis(res_estimation)
-        estimate_layer_resources["total"] = aggregate_dict_keys(
-            estimate_layer_resources
-        )
+        estimate_layer_resources["total"] = aggregate_dict_keys(estimate_layer_resources)
         with open(report_dir + "/estimate_layer_resources.json", "w") as f:
             json.dump(estimate_layer_resources, f, indent=2)
         estimate_layer_resources_complete = model.analysis(res_estimation_complete)
@@ -468,8 +464,7 @@ def step_generate_estimate_reports(model: ModelWrapper, cfg: DataflowBuildConfig
         est_fps = n_clock_cycles_per_sec / estimate_network_performance["max_cycles"]
         estimate_network_performance["estimated_throughput_fps"] = est_fps
         est_latency_ns = (
-            estimate_network_performance["critical_path_cycles"]
-            * cfg.synth_clk_period_ns
+            estimate_network_performance["critical_path_cycles"] * cfg.synth_clk_period_ns
         )
         estimate_network_performance["estimated_latency_ns"] = est_latency_ns
         with open(report_dir + "/estimate_network_performance.json", "w") as f:
@@ -477,12 +472,20 @@ def step_generate_estimate_reports(model: ModelWrapper, cfg: DataflowBuildConfig
     return model
 
 
+def step_minimize_bit_width(model: ModelWrapper, cfg: DataflowBuildConfig):
+    """Tighten the weight and accumulator bit widths for each layer."""
+    if cfg.minimize_bit_width:
+        model = model.transform(MinimizeWeightBitWidth())
+        model = model.transform(MinimizeAccumulatorWidth())
+        # make sure the changed datatypes are propagated through the network
+        model = model.transform(InferDataTypes())
+    return model
+
+
 def step_hls_codegen(model: ModelWrapper, cfg: DataflowBuildConfig):
     "Generate Vivado HLS code to prepare HLSCustomOp nodes for IP generation."
 
-    model = model.transform(
-        PrepareIP(cfg._resolve_fpga_part(), cfg._resolve_hls_clk_period())
-    )
+    model = model.transform(PrepareIP(cfg._resolve_fpga_part(), cfg._resolve_hls_clk_period()))
     return model
 
 
@@ -572,6 +575,7 @@ def step_set_fifo_depths(model: ModelWrapper, cfg: DataflowBuildConfig):
     hw_attrs = [
         "PE",
         "SIMD",
+        "parallel_window",
         "ram_style",
         "depth",
         "impl_style",
@@ -581,9 +585,7 @@ def step_set_fifo_depths(model: ModelWrapper, cfg: DataflowBuildConfig):
         "inFIFODepths",
         "outFIFODepths",
     ]
-    extract_model_config_to_json(
-        model, cfg.output_dir + "/final_hw_config.json", hw_attrs
-    )
+    extract_model_config_to_json(model, cfg.output_dir + "/final_hw_config.json", hw_attrs)
 
     # perform FIFO splitting and shallow FIFO removal only after the final config
     # json file has been written. otherwise, since these transforms may add/remove
@@ -594,9 +596,7 @@ def step_set_fifo_depths(model: ModelWrapper, cfg: DataflowBuildConfig):
 
     # after FIFOs are ready to go, call PrepareIP and HLSSynthIP again
     # this will only run for the new nodes (e.g. FIFOs and DWCs)
-    model = model.transform(
-        PrepareIP(cfg._resolve_fpga_part(), cfg._resolve_hls_clk_period())
-    )
+    model = model.transform(PrepareIP(cfg._resolve_fpga_part(), cfg._resolve_hls_clk_period()))
     model = model.transform(HLSSynthIP())
     return model
 
@@ -633,9 +633,7 @@ def step_create_stitched_ip(model: ModelWrapper, cfg: DataflowBuildConfig):
         if cfg.verify_save_rtlsim_waveforms:
             report_dir = cfg.output_dir + "/report"
             os.makedirs(report_dir, exist_ok=True)
-            verify_model.set_metadata_prop(
-                "rtlsim_trace", "%s/verify_rtlsim.vcd" % (report_dir)
-            )
+            verify_model.set_metadata_prop("rtlsim_trace", "%s/verify_rtlsim.vcd" % (report_dir))
         verify_step(verify_model, cfg, "stitched_ip_rtlsim", need_parent=True)
         os.environ["LIVENESS_THRESHOLD"] = str(prev_liveness)
     return model
@@ -656,9 +654,7 @@ def step_measure_rtlsim_performance(model: ModelWrapper, cfg: DataflowBuildConfi
         rtlsim_model = deepcopy(model)
         rtlsim_model = prepare_for_stitched_ip_rtlsim(rtlsim_model, cfg)
         # multi-in/out streams currently not supported in our C++ verilator driver
-        model_multi_io = (
-            len(rtlsim_model.graph.input) > 1 or len(rtlsim_model.graph.output) > 1
-        )
+        model_multi_io = len(rtlsim_model.graph.input) > 1 or len(rtlsim_model.graph.output) > 1
         force_python_rtlsim = cfg.force_python_rtlsim or model_multi_io
         if model_multi_io:
             warnings.warn(
@@ -668,7 +664,6 @@ def step_measure_rtlsim_performance(model: ModelWrapper, cfg: DataflowBuildConfi
         rtlsim_bs = int(cfg.rtlsim_batch_size)
         orig_rtlsim_trace_depth = get_rtlsim_trace_depth()
         if force_python_rtlsim:
-            # run with single input to get latency
             assert rtlsim_bs > 0, "rtlsim batch size must be >0"
             if cfg.verify_save_rtlsim_waveforms:
                 # set depth to 3 for layer-by-layer visibility
@@ -677,12 +672,12 @@ def step_measure_rtlsim_performance(model: ModelWrapper, cfg: DataflowBuildConfi
                     "rtlsim_trace",
                     "%s/rtlsim_perf_batch_%d.vcd" % (report_dir, rtlsim_bs),
                 )
-            rtlsim_model.set_metadata_prop(
-                "extra_verilator_args", str(["-CFLAGS", "-O3"])
-            )
+            rtlsim_model.set_metadata_prop("extra_verilator_args", str(["-CFLAGS", "-O3"]))
+            # run with single input to get latency
+            rtlsim_latency_dict = throughput_test_rtlsim(rtlsim_model, 1)
+            # run with batch to get stable-state throughput
             rtlsim_perf_dict = throughput_test_rtlsim(rtlsim_model, rtlsim_bs)
-            rtlsim_latency = rtlsim_perf_dict["cycles"]
-            rtlsim_perf_dict["latency_cycles"] = rtlsim_latency
+            rtlsim_perf_dict["latency_cycles"] = rtlsim_latency_dict["cycles"]
         else:
             rtlsim_perf_dict = verilator_fifosim(model, rtlsim_bs)
             # keep keys consistent between the Python and C++-styles
@@ -693,9 +688,22 @@ def step_measure_rtlsim_performance(model: ModelWrapper, cfg: DataflowBuildConfi
             rtlsim_perf_dict["runtime[ms]"] = runtime_s * 1000
             rtlsim_perf_dict["throughput[images/s]"] = rtlsim_bs / runtime_s
             rtlsim_perf_dict["fclk[mhz]"] = fclk_mhz
-            for (key, val) in rtlsim_perf_dict.items():
+            for key, val in rtlsim_perf_dict.items():
                 if "max_count" in key:
                     del rtlsim_perf_dict[key]
+        # estimate stable-state throughput based on latency+throughput
+        if rtlsim_bs == 1:
+            rtlsim_perf_dict["stable_throughput[images/s]"] = rtlsim_perf_dict[
+                "throughput[images/s]"
+            ]
+        else:
+            total_cycles = rtlsim_perf_dict["cycles"]
+            latency_cycles = rtlsim_perf_dict["latency_cycles"]
+            stablestate_cycles = total_cycles - latency_cycles
+            clk_ns = float(model.get_metadata_prop("clk_ns"))
+            fclk_mhz = 1 / (clk_ns * 0.001)
+            runtime_s = (stablestate_cycles * clk_ns) * (10**-9)
+            rtlsim_perf_dict["stable_throughput[images/s]"] = rtlsim_bs / runtime_s
 
         with open(report_dir + "/rtlsim_performance.json", "w") as f:
             json.dump(rtlsim_perf_dict, f, indent=2)
@@ -722,13 +730,9 @@ def step_out_of_context_synthesis(model: ModelWrapper, cfg: DataflowBuildConfig)
     """Run out-of-context synthesis and generate reports.
     Depends on the DataflowOutputType.STITCHED_IP output product."""
     if DataflowOutputType.OOC_SYNTH in cfg.generate_outputs:
-        assert (
-            DataflowOutputType.STITCHED_IP in cfg.generate_outputs
-        ), "OOC needs stitched IP"
+        assert DataflowOutputType.STITCHED_IP in cfg.generate_outputs, "OOC needs stitched IP"
         model = model.transform(
-            SynthOutOfContext(
-                part=cfg._resolve_fpga_part(), clk_period_ns=cfg.synth_clk_period_ns
-            )
+            SynthOutOfContext(part=cfg._resolve_fpga_part(), clk_period_ns=cfg.synth_clk_period_ns)
         )
         report_dir = cfg.output_dir + "/report"
         os.makedirs(report_dir, exist_ok=True)
@@ -823,6 +827,7 @@ build_dataflow_step_lookup = {
     "step_create_dataflow_partition": step_create_dataflow_partition,
     "step_target_fps_parallelization": step_target_fps_parallelization,
     "step_apply_folding_config": step_apply_folding_config,
+    "step_minimize_bit_width": step_minimize_bit_width,
     "step_generate_estimate_reports": step_generate_estimate_reports,
     "step_hls_codegen": step_hls_codegen,
     "step_hls_ipgen": step_hls_ipgen,
