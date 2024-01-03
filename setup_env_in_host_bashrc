@@ -1,11 +1,11 @@
-source /home/Xilinx/Vivado/2022.1/settings64.sh
-source /home/Xilinx/Vitis_HLS/2022.1/settings64.sh
-source /home/Xilinx/Vitis/2022.1/settings64.sh
+source /home/Xilinx/Vivado/2022.2/settings64.sh
+source /home/Xilinx/Vitis_HLS/2022.2/settings64.sh
+source /home/Xilinx/Vitis/2022.2/settings64.sh
 
 export FINN_XILINX_PATH=/home/Xilinx
-export FINN_XILINX_VERSION=2022.1
-export VITIS_PATH=/home/Xilinx/Vitis/2022.1
-export PLATFORM_REPO_PATHS=/home/Xilinx/Vitis/2022.1/platforms
+export FINN_XILINX_VERSION=2022.2
+export VITIS_PATH=/home/Xilinx/Vitis/2022.2
+export PLATFORM_REPO_PATHS=/home/Xilinx/Vitis/2022.2/platforms
 
 export PYNQ_BOARD=Pynq-Z2
 export PYNQ_IP=192.168.1.99
