@@ -54,7 +54,7 @@ def fetch_test_model(topology, wbits=2, abits=2):
 def get_folding_cfg(depth=65536):
     cfg = dict()
     cfg["Defaults"] = dict()
-    for i in range(3):
+    for i in range(4):
         key = "StreamingFIFO_" + str(i)
         cfg[key] = {"depth": depth, "ram_style": "auto", "impl_style": "vivado"}
     return cfg
@@ -78,7 +78,7 @@ def test_split_large_fifos(depth, force_python_rtlsim):
         target_fps=10000,
         force_python_rtlsim=force_python_rtlsim,
         synth_clk_period_ns=10.0,
-        board="Pynq-Z2",
+        board="Pynq-Z1",
         rtlsim_batch_size=100,
         shell_flow_type=build_cfg.ShellFlowType.VIVADO_ZYNQ,
         generate_outputs=[

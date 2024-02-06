@@ -48,7 +48,7 @@ from finn.util.basic import make_build_dir
 from finn.util.test import load_test_checkpoint_or_skip
 
 target_clk_ns = 10
-build_board = "Pynq-Z2"
+build_board = "Pynq-Z1"
 build_dir = os.environ["FINN_BUILD_DIR"]
 
 
@@ -185,7 +185,7 @@ def test_end2end_cybsec_mlp_build():
         assert est_cycles_dict["MatrixVectorActivation_1"] == 64
     with open(est_res_report, "r") as f:
         est_res_dict = json.load(f)
-        assert est_res_dict["total"]["LUT"] == 7904.0
+        assert est_res_dict["total"]["LUT"] == 7899.0
         assert est_res_dict["total"]["BRAM_18K"] == 36.0
     shutil.copytree(output_dir + "/deploy", get_checkpoint_name("build"))
     shutil.rmtree(get_checkpoint_name("build"))
