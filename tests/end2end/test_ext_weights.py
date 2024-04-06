@@ -1,4 +1,5 @@
-# Copyright (c) 2021, Xilinx
+# Copyright (C) 2021-2022, Xilinx, Inc.
+# Copyright (C) 2022-2024, Advanced Micro Devices, Inc.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -88,7 +89,7 @@ def test_end2end_ext_weights_build():
         verbose=True,
         folding_config_file=folding_config_file,
         synth_clk_period_ns=target_clk_ns,
-        board="Pynq-Z2",
+        board="Pynq-Z1",
         shell_flow_type=build_cfg.ShellFlowType.VIVADO_ZYNQ,
         generate_outputs=[
             build_cfg.DataflowOutputType.ESTIMATE_REPORTS,

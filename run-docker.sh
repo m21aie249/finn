@@ -47,7 +47,7 @@ if [ -z "$FINN_XILINX_PATH" ];then
 fi
 
 if [ -z "$FINN_XILINX_VERSION" ];then
-  recho "Please set the FINN_XILINX_VERSION to the version of the Xilinx tools to use (e.g. 2020.1)"
+  recho "Please set the FINN_XILINX_VERSION to the version of the Xilinx tools to use (e.g. 2022.2)"
   recho "FINN functionality depending on Vivado, Vitis or HLS will not be available."
 fi
 
@@ -77,7 +77,7 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 : ${LOCALHOST_URL="localhost"}
 : ${PYNQ_USERNAME="xilinx"}
 : ${PYNQ_PASSWORD="xilinx"}
-: ${PYNQ_BOARD="Pynq-Z2"}
+: ${PYNQ_BOARD="Pynq-Z1"}
 : ${PYNQ_TARGET_DIR="/home/xilinx/$DOCKER_INST_NAME"}
 : ${NUM_DEFAULT_WORKERS=4}
 : ${FINN_SSH_KEY_DIR="$SCRIPTPATH/ssh_keys"}

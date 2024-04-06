@@ -64,10 +64,10 @@ def make_multi_fclayer_model(ch, wdt, adt, tdt, nnodes):
         simd = 1
         FCLayer_nodes += [
             helper.make_node(
-                "MatrixVectorActivation",
+                "MVAU_hls",
                 [tensors[i].name, "weights_" + str(i), "thresh_" + str(i)],
                 [tensors[i + 1].name],
-                domain="finn.custom_op.fpgadataflow",
+                domain="finn.custom_op.fpgadataflow.hls",
                 backend="fpgadataflow",
                 MW=ch,
                 MH=ch,
@@ -109,7 +109,7 @@ def make_multi_fclayer_model(ch, wdt, adt, tdt, nnodes):
 # desired frames per second
 @pytest.mark.parametrize("target_fps", [30, 10**5, 10**7])
 # target chip or board
-@pytest.mark.parametrize("platform", ["Pynq-Z2", "Ultra96", "U200"])
+@pytest.mark.parametrize("platform", ["Pynq-Z1", "Ultra96", "U200"])
 @pytest.mark.fpgadataflow
 def test_set_folding(target_fps, platform):
     model = make_multi_fclayer_model(128, DataType["INT4"], DataType["INT2"], DataType["INT16"], 5)
@@ -129,7 +129,7 @@ def test_set_folding(target_fps, platform):
     achieved_cycles_per_frame = max(exp_cycles_dict.values())
 
     min_cycles = dict()
-    min_cycles["Pynq-Z2"] = 128
+    min_cycles["Pynq-Z1"] = 128
     min_cycles["Ultra96"] = 64
     min_cycles["U200"] = 1
 
