@@ -8,6 +8,8 @@ export VITIS_PATH=/home/Xilinx/Vitis/2023.2
 export PLATFORM_REPO_PATHS=/home/Xilinx/Vitis/2023.2/platforms
 
 export PYNQ_BOARD=Pynq-Z2
+#export PYNQ_BOARD=ZCU104
 export PYNQ_IP=192.168.1.99
+#export PYNQ_IP=192.168.1.98
 export PYNQ_USERNAME=xilinx
 export PYNQ_PASSWORD=xilinx

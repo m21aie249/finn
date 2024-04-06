@@ -7,16 +7,15 @@ Thanks to [This Page](https://www.daiphys.com/portal/fpga/xilinx/tools/finn.html
 
 1. On a Linux Ubuntu Desktop installation, with about 400GB of free space, install docker to run without root.
 2. Install Xilinx Vivado/Vitis 2023.2 using the Linux installer from [AMD](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2023-2.html). This will take a few hours depending on the host hardware and internet connection. This fork would work on version 2022.2 as well. If you need to change the version, update the .bashrc in step 3 below to point to your 2022.2 installation and also change XRT_DEB_VERSION in run_docker.sh and docker/Dockerfile.finn files to xrt_202220.2.14.354_22.04-amd64-xrt
-3. Add the lines present in the setup_env_in_host_bashrc file  in this repo to the user's .bashrc file
+3. Add the lines present in the setup_env_in_host_bashrc file  in this repo to the user's .bashrc file. Comment/Uncomment the board specific lines (Pynq-2 or ZCU104)
 4. Open a terminal and create a folder called xilinx-finn (mkdir xilinx-finn)
 5. Enter the folder (cd xilinx-finn)
 6. Clone this FINN repository (git clone https://github.com/m21aie249/finn.git) and then move to the finn folder (cd finn)
-7. Create a folder called gdrive-key (mkdir gdrive-key). Follow instruction at [Gspread Authentication](https://docs.gspread.org/en/latest/oauth2.html) if results upload to a google spreadsheet is required.
-8. If step 6 was done, download the json file and rename it service_account.json and copy it to the gdrive_key folder. The tests will use this to upload results to a precreated spreadsheet file named finn-end2end-dashboard
-9. Create a directory called .ssh (mkdir .ssh) This step is required before setting up the automatic ssh login and keygen for the Pynq-Z2 board.
-10. Then follow these steps: [PYNQ board first-time setup](https://finn.readthedocs.io/en/latest/getting_started.html#pynq-board-first-time-setup)
-11. Run thie docker script (./run_docker.sh). This will build the container in about 20 minutes and then present a prompt when successful. 
-12. Further instructions and testing commands are included in the official documentation. Full FINN testcases suite would take 2 days to complete on a standard laptop. It is worthwhile running it once alongwith the Pynq-Z2 board to ensure everything is working correctly.
+7. Create a directory called .ssh (mkdir .ssh) This step is required before setting up the automatic ssh login and keygen for the Pynq-Z2 board.
+8. Then follow these steps, remember to setup IP Address per your network: [PYNQ board first-time setup](https://finn.readthedocs.io/en/latest/getting_started.html#pynq-board-first-time-setup)
+9. If you want to setup ZCU104, follow these additional steps, also, , remember to setup IP Address per your network: [ZCU104 Setup Guide](https://pynq.readthedocs.io/en/v2.5.1/getting_started/zcu104_setup.html)
+10. Run this docker script (./run_docker.sh). This will build the container in about 20 minutes and then present a prompt when successful. 
+11. Further instructions and testing commands are included in the official documentation (quicktest full). Full FINN testcases suite would take 2 days to complete on a standard laptop. It is worthwhile running it once alongwith the Pynq-Z2/ZCU104 board to ensure everything is working correctly.
 
 
 ## <img src=https://raw.githubusercontent.com/Xilinx/finn/github-pages/docs/img/finn-logo.png width=128/> Fast, Scalable Quantized Neural Network Inference on FPGAs

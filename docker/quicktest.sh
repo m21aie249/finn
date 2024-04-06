@@ -21,6 +21,8 @@ elif [ $1 = "full" ]; then
   $0 main;
   $0 rtlsim;
   $0 end2end;
+  $0 bnn_pynq;
+  $0 bnn_zcu104;
 else
   echo "Unrecognized argument to quicktest.sh"
 fi
