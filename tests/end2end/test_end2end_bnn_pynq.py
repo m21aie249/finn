@@ -600,7 +600,7 @@ class TestEnd2End:
         prev_chkpt_name = get_checkpoint_name(topology, wbits, abits, "convert_to_hw_layers")
         model = load_test_checkpoint_or_skip(prev_chkpt_name)
         # set preferred impl style to hls for all layers
-        force_hls_boards = ["Pynq-Z1", "U250"]
+        force_hls_boards = ["Pynq-Z2", "ZCU104"]
         if topology == "cnv" and wbits == 2 and abits == 2 and board in force_hls_boards:
             for node in model.graph.node:
                 if is_fpgadataflow_node(node):
