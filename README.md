@@ -6,7 +6,7 @@ This official documentation page is a companion to the instructions below: [Gett
 Thanks to [This Page](https://www.daiphys.com/portal/fpga/xilinx/tools/finn.html) for resolutions of some build/run errors related to package dependencies.
 
 1. On a Linux Ubuntu Desktop installation, with about 400GB of free space, install docker to run without root.
-2. Install Xilinx Vivado/Vitis 2023.2 using the Linux installer from [AMD](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2023-2.html). This will take a few hours depending on the host hardware and internet connection. This fork would work on version 2022.2 as well. If you need to change the version, update the .bashrc in step 3 below to point to your 2022.2 installation and also change XRT_DEB_VERSION in run_docker.sh and docker/Dockerfile.finn files to xrt_202220.2.14.354_22.04-amd64-xrt
+2. Install Xilinx Vivado/Vitis 2022.2 using the Linux installer from [AMD](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools/2022-2.html). This will take a few hours depending on the host hardware and internet connection. This fork would work on version 2023.2 as well (Not extensively tested). If you need to change the version, update the .bashrc in step 3 below to point to your 2023.2 installation and also change XRT_DEB_VERSION in run_docker.sh and docker/Dockerfile.finn files to xrt_202320.2.16.204_22.04-amd64-xrt
 3. Add the lines present in the setup_env_in_host_bashrc file  in this repo to the user's .bashrc file. Comment/Uncomment the board specific lines (Pynq-Z2 or ZCU104)
 4. Open a terminal and create a folder called xilinx-finn (mkdir xilinx-finn)
 5. Enter the folder (cd xilinx-finn)
